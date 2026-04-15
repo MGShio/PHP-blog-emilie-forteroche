@@ -3,13 +3,13 @@
 /**
  * Classe qui gère les articles.
  */
-class ArticleManager extends AbstractEntityManager 
+class ArticleManager extends AbstractEntityManager
 {
     /**
      * Récupère tous les articles.
      * @return array : un tableau d'objets Article.
      */
-    public function getAllArticles() : array
+    public function getAllArticles(): array
     {
         $sql = "SELECT * FROM article";
         $result = $this->db->query($sql);
@@ -20,13 +20,13 @@ class ArticleManager extends AbstractEntityManager
         }
         return $articles;
     }
-    
+
     /**
      * Récupère un article par son id.
      * @param int $id : l'id de l'article.
      * @return Article|null : un objet Article ou null si l'article n'existe pas.
      */
-    public function getArticleById(int $id) : ?Article
+    public function getArticleById(int $id): ?Article
     {
         $sql = "SELECT * FROM article WHERE id = :id";
         $result = $this->db->query($sql, ['id' => $id]);
@@ -43,7 +43,7 @@ class ArticleManager extends AbstractEntityManager
      * @param Article $article : l'article à ajouter ou modifier.
      * @return void
      */
-    public function addOrUpdateArticle(Article $article) : void 
+    public function addOrUpdateArticle(Article $article): void
     {
         if ($article->getId() == -1) {
             $this->addArticle($article);
@@ -57,7 +57,7 @@ class ArticleManager extends AbstractEntityManager
      * @param Article $article : l'article à ajouter.
      * @return void
      */
-    public function addArticle(Article $article) : void
+    public function addArticle(Article $article): void
     {
         $sql = "INSERT INTO article (id_user, title, content, date_creation) VALUES (:id_user, :title, :content, NOW())";
         $this->db->query($sql, [
@@ -72,7 +72,7 @@ class ArticleManager extends AbstractEntityManager
      * @param Article $article : l'article à modifier.
      * @return void
      */
-    public function updateArticle(Article $article) : void
+    public function updateArticle(Article $article): void
     {
         $sql = "UPDATE article SET title = :title, content = :content, date_update = NOW() WHERE id = :id";
         $this->db->query($sql, [
@@ -87,9 +87,64 @@ class ArticleManager extends AbstractEntityManager
      * @param int $id : l'id de l'article à supprimer.
      * @return void
      */
-    public function deleteArticle(int $id) : void
+    public function deleteArticle(int $id): void
     {
         $sql = "DELETE FROM article WHERE id = :id";
         $this->db->query($sql, ['id' => $id]);
+    }
+
+    /**
+     * Incrémente le nombre de vues d'un article.
+     * @param int $articleId : l'ID de l'article.
+     */
+    public function incrementView(int $articleId): void
+    {
+        $sql = "UPDATE article SET `view` = `view` + 1 WHERE id = :id";
+        $this->db->query($sql, ['id' => $articleId]);
+    }
+
+    /**
+     * Récupère tous les articles avec leur nombre de vues et de commentaires.
+     * @param string $sort : le critère de tri.
+     * @param string $order : l'ordre de tri (ASC ou DESC).
+     * @return array : un tableau associatif des articles avec leurs vues et commentaires.
+     */
+    public function getAllArticlesWithViewsAndComments(string $sort = 'date_creation', string $order = 'DESC'): array
+    {
+        // Vérifier que le paramètre d'ordre est valide
+        $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
+
+        // Récupérer les articles
+        $sql = "SELECT id, title, `view`, date_creation FROM article";
+
+        // Ajouter le tri SQL uniquement si ce n'est pas 'comments_count'
+        if ($sort !== 'comments_count') {
+            $validSorts = ['id', 'title', 'view', 'date_creation'];
+            if (in_array($sort, $validSorts)) {
+                $sql .= " ORDER BY $sort $order";
+            }
+        }
+
+        $result = $this->db->query($sql);
+        $articles = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ajouter le nombre de commentaires pour chaque article
+        $commentManager = new CommentManager();
+        foreach ($articles as &$article) {
+            $article['comments_count'] = $commentManager->countCommentsForArticle($article['id']);
+        }
+
+        // Trier les articles par le nombre de commentaires si nécessaire
+        if ($sort === 'comments_count') {
+            usort($articles, function ($a, $b) use ($order) {
+                if ($order === 'ASC') {
+                    return $a['comments_count'] <=> $b['comments_count'];
+                } else {
+                    return $b['comments_count'] <=> $a['comments_count'];
+                }
+            });
+        }
+
+        return $articles;
     }
 }

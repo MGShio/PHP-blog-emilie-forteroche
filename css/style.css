@@ -350,3 +350,38 @@ footer {
     color: white;
     background-color: var(--headerColor);
 }
+
+/* Tableau de monitoring */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'arial', sans-serif;
+}
+
+table th {
+    background-color: var(--headerPaleColor);
+    color: var(--headerColor);
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(239, 225, 186, 0.3); /* Utilisation de --headerPaleColor avec une opacité réduite */
+}
+
+table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--backgroundColor);
+}
+
+table td a.submit {
+    background-color: var(--commentColor);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+}
