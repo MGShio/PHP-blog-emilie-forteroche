@@ -313,6 +313,10 @@ a.info {
     color: white;
 }
 
+.admin-menu {
+    margin-top: 20px;
+}
+
 .articleLine {
     display: flex; 
 }
@@ -353,7 +357,7 @@ footer {
 
 /* Tableau de monitoring */
 table {
-    width: 100%;
+    width: auto;
     border-collapse: collapse;
     margin: 20px 0;
     font-family: 'arial', sans-serif;
@@ -365,16 +369,19 @@ table th {
     font-weight: bold;
     padding: 12px;
     text-align: left;
+    white-space: nowrap;
 }
 
-table tr:nth-child(even) {
-    background-color: rgba(239, 225, 186, 0.3); /* Utilisation de --headerPaleColor avec une opacité réduite */
+table tbody tr:nth-child(even) td,
+table tr:nth-child(even) td {
+    background-color: #adadad;
 }
 
 table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid var(--backgroundColor);
+    background-clip: padding-box;
 }
 
 table td a.submit {
@@ -384,4 +391,51 @@ table td a.submit {
     border-radius: 3px;
     text-decoration: none;
     display: inline-block;
+}
+
+/* Tableau de gestion des commentaires */
+.comments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'arial', sans-serif;
+}
+
+.comments-table th {
+    background-color: var(--headerPaleColor);
+    color: var(--headerColor);
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+}
+
+.comments-table th:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.comments-table tr:nth-child(even) {
+    background-color: rgba(239, 225, 186, 0.3);
+}
+
+.comments-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--backgroundColor);
+    vertical-align: top;
+}
+
+.comments-table td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.comments-table p {
+    margin: 0 0 5px 0;
+}
+
+.comments-table small {
+    color: #666;
+    font-style: italic;
 }

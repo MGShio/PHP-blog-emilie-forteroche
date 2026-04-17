@@ -7,11 +7,6 @@
 
 <h2>Edition des articles</h2>
 
-<!-- Ajout du lien vers la page de monitoring -->
-<div class="admin-menu">
-    <a class="submit" href="index.php?action=monitoring">Monitoring des articles</a>
-</div>
-
 <div class="adminArticle">
     <?php foreach ($articles as $article) { ?>
         <div class="articleLine">
@@ -24,3 +19,8 @@
 </div>
 
 <a class="submit" href="index.php?action=showUpdateArticleForm">Ajouter un article</a>
+
+<!-- Ajout du lien vers la page de monitoring -->
+<div class="admin-menu">
+    <a class="submit" href="index.php?action=monitoring">Monitoring des articles</a>
+</div>

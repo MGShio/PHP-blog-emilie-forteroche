@@ -222,6 +222,12 @@ class AdminController
         $this->checkIfUserIsConnected();
 
         $commentId = Utils::request("id", -1);
+        $articleId = Utils::request("articleId", -1);
+
+        if ($articleId == -1) {
+            throw new Exception("L'ID de l'article est manquant.");
+        }
+
         $commentManager = new CommentManager();
         $comment = $commentManager->getCommentById($commentId);
 
@@ -229,7 +235,7 @@ class AdminController
             $commentManager->deleteComment($comment);
         }
 
-        $articleId = Utils::request("articleId", -1);
-        Utils::redirect("index.php?action=showComments&articleId=$articleId");
+        // Redirection vers la page de gestion des commentaires de l'article
+        Utils::redirect("showComments&articleId=$articleId");
     }
 }
