@@ -60,4 +60,34 @@ class ArticleController
         $view = new View("A propos");
         $view->render("apropos");
     }
+
+    /**
+     * Affiche la page "monitoring".
+     * @return void
+     */
+    public function monitoring(): void
+    {
+        $sort = Utils::request("sort", "date_creation");
+        $order = Utils::request("order", "DESC");
+
+        $articleManager = new ArticleManager();
+        $articles = $articleManager->getAllArticlesWithViewsAndComments($sort, $order);
+
+        $articlesForView = array_map(function ($article) {
+            return [
+                'id' => $article->getId(),
+                'title' => $article->getTitle(),
+                'view' => $article->view,
+                'comments_count' => $article->comments_count,
+                'date_creation' => $article->getDateCreation()->format('d/m/Y H:i'),
+            ];
+        }, $articles);
+
+        $view = new View("Monitoring des articles");
+        $view->render("monitoring", [
+            'articles' => $articlesForView,
+            'sort' => $sort,
+            'order' => $order,
+        ]);
+    }
 }

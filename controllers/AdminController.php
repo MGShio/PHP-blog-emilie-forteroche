@@ -186,9 +186,14 @@ class AdminController
     {
         $this->checkIfUserIsConnected();
 
+
         // Récupérer le paramètre de tri et le sens (croissant/décroissant)
+        $sorts = ['title', 'view', 'comments_count', 'date_creation'];
         $sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_creation';
+        $sort = in_array($sort, $sorts) ? $sort : 'date_creation';
+        $orders = ['ASC', 'DESC'];
         $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+        $order = in_array($order, $orders) ? $order : 'DESC';
 
         // Récupérer les articles avec les vues et commentaires
         $articleManager = new ArticleManager();
@@ -236,6 +241,6 @@ class AdminController
         }
 
         // Redirection vers la page de gestion des commentaires de l'article
-        Utils::redirect("showComments&articleId=$articleId");
+        Utils::redirect("showComments", ["articleId" => $articleId]);
     }
 }

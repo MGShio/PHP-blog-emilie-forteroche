@@ -35,12 +35,12 @@
     <tbody>
         <?php foreach ($articles as $article): ?>
         <tr>
-            <td><?= htmlspecialchars($article['title']) ?></td>
-            <td><?= $article['view'] ?></td>
-            <td><?= $article['comments_count'] ?></td>
-            <td><?= $article['date_creation'] ?></td>
+            <td><?= htmlspecialchars($article->getTitle()) ?></td>
+            <td><?= $article->view ?></td>
+            <td><?= $article->comments_count ?></td>
+            <td><?= $article->getDateCreation()->format('d/m/Y H:i') ?></td>
             <td>
-                <a class="submit" href="index.php?action=showComments&articleId=<?= $article['id'] ?>">Voir/Supprimer les commentaires</a>
+                <a class="submit" href="index.php?action=showComments&articleId=<?= $article->getId() ?>">Voir/Supprimer les commentaires</a>
             </td>
         </tr>
         <?php endforeach; ?>

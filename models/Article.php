@@ -4,19 +4,21 @@
  * Entité Article, un article est défini par les champs
  * id, id_user, title, content, date_creation, date_update
  */
- class Article extends AbstractEntity 
- {
+class Article extends AbstractEntity
+{
     private int $idUser;
     private string $title = "";
     private string $content = "";
     private ?DateTime $dateCreation = null;
-    private ?DateTime $dateUpdate = null;  
+    private ?DateTime $dateUpdate = null;
+    public int $view = 0;
+    public int $comments_count = 0;
 
     /**
      * Setter pour l'id de l'utilisateur. 
      * @param int $idUser
      */
-    public function setIdUser(int $idUser) : void 
+    public function setIdUser(int $idUser): void
     {
         $this->idUser = $idUser;
     }
@@ -25,7 +27,7 @@
      * Getter pour l'id de l'utilisateur.
      * @return int
      */
-    public function getIdUser() : int 
+    public function getIdUser(): int
     {
         return $this->idUser;
     }
@@ -34,7 +36,7 @@
      * Setter pour le titre.
      * @param string $title
      */
-    public function setTitle(string $title) : void 
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -43,7 +45,7 @@
      * Getter pour le titre.
      * @return string
      */
-    public function getTitle() : string 
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -52,12 +54,12 @@
      * Setter pour le contenu.
      * @param string $content
      */
-    public function setContent(string $content) : void 
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }
 
-    
+
     /**
      * Getter pour le contenu.
      * Retourne les $length premiers caractères du contenu.
@@ -66,7 +68,7 @@
      * Si le contenu est plus grand que $length, on retourne les $length premiers caractères avec "..." à la fin.
      * @return string
      */
-    public function getContent(int $length = -1) : string 
+    public function getContent(int $length = -1): string
     {
         if ($length > 0) {
             // Ici, on utilise mb_substr et pas substr pour éviter de couper un caractère en deux (caractère multibyte comme les accents).
@@ -85,36 +87,38 @@
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé. 
      */
-    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s') : void 
+    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s'): void
     {
         if (is_string($dateCreation)) {
-            $dateCreation = DateTime::createFromFormat($format, $dateCreation);
+            $this->dateCreation = new DateTime($dateCreation);
+        } else {
+            $this->dateCreation = $dateCreation;
         }
-        $this->dateCreation = $dateCreation;
     }
 
     /**
      * Getter pour la date de création.
-     * Grâce au setter, on a la garantie de récupérer un objet DateTime.
-     * @return DateTime
+     * Grâce au setter, on a la garantie de récupérer un objet DateTime ou null.
+     * @return DateTime|null
      */
-    public function getDateCreation() : DateTime 
+    public function getDateCreation(): ?DateTime
     {
         return $this->dateCreation;
     }
 
     /**
      * Setter pour la date de mise à jour. Si la date est une string, on la convertit en DateTime.
-     * @param string|DateTime $dateUpdate
+     * @param string|DateTime|null $dateUpdate
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé.
      */
-    public function setDateUpdate(string|DateTime $dateUpdate, string $format = 'Y-m-d H:i:s') : void 
+    public function setDateUpdate(string|DateTime|null $dateUpdate, string $format = 'Y-m-d H:i:s'): void
     {
         if (is_string($dateUpdate)) {
-            $dateUpdate = DateTime::createFromFormat($format, $dateUpdate);
+            $this->dateUpdate = new DateTime($dateUpdate);
+        } else {
+            $this->dateUpdate = $dateUpdate;
         }
-        $this->dateUpdate = $dateUpdate;
     }
 
     /**
@@ -123,8 +127,30 @@
      * si la date de mise à jour n'a pas été définie.
      * @return DateTime|null
      */
-    public function getDateUpdate() : ?DateTime 
+    public function getDateUpdate(): ?DateTime
     {
         return $this->dateUpdate;
     }
- }
+
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'id') {
+            $this->setId((int)$value);
+        } elseif ($name === 'id_user') {
+            $this->setIdUser((int)$value);
+        } elseif ($name === 'title') {
+            $this->setTitle($value);
+        } elseif ($name === 'content') {
+            $this->setContent($value);
+        } elseif ($name === 'date_creation') {
+            $this->setDateCreation($value);
+        } elseif ($name === 'date_update') {
+            $this->setDateUpdate($value);
+        }
+    }
+}

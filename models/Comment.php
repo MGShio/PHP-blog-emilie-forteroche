@@ -88,9 +88,24 @@ class Comment extends AbstractEntity
     public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s') : void 
     {
         if (is_string($dateCreation)) {
-            $dateCreation = DateTime::createFromFormat($format, $dateCreation);
+            $this->dateCreation = new DateTime($dateCreation);
+        } else {
+            $this->dateCreation = $dateCreation;
         }
-        $this->dateCreation = $dateCreation;
     }
 
+    public function __set($name, $value)
+    {
+        if ($name === 'id') {
+            $this->setId((int)$value);
+        } elseif ($name === 'id_article') {
+            $this->setIdArticle((int)$value);
+        } elseif ($name === 'pseudo') {
+            $this->setPseudo($value);
+        } elseif ($name === 'content') {
+            $this->setContent($value);
+        } elseif ($name === 'date_creation') {
+            $this->setDateCreation($value);
+        }
+    }
 }

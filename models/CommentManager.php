@@ -14,11 +14,7 @@ class CommentManager extends AbstractEntityManager
     {
         $sql = "SELECT * FROM comment WHERE id_article = :idArticle";
         $result = $this->db->query($sql, ['idArticle' => $idArticle]);
-        $comments = [];
-
-        while ($comment = $result->fetch()) {
-            $comments[] = new Comment($comment);
-        }
+        $comments = $result->fetchAll(PDO::FETCH_CLASS, 'Comment');
         return $comments;
     }
 

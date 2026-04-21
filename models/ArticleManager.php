@@ -39,13 +39,13 @@ class ArticleManager extends AbstractEntityManager
 
     /**
      * Ajoute ou modifie un article.
-     * On sait si l'article est un nouvel article car son id sera -1.
+     * On sait si l'article est un nouvel article car son id sera null.
      * @param Article $article : l'article à ajouter ou modifier.
      * @return void
      */
     public function addOrUpdateArticle(Article $article): void
     {
-        if ($article->getId() == -1) {
+        if ($article->getId() === null) {
             $this->addArticle($article);
         } else {
             $this->updateArticle($article);
@@ -111,13 +111,9 @@ class ArticleManager extends AbstractEntityManager
      */
     public function getAllArticlesWithViewsAndComments(string $sort = 'date_creation', string $order = 'DESC'): array
     {
-        // Vérifier que le paramètre d'ordre est valide
         $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
-
-        // Récupérer les articles
         $sql = "SELECT id, title, `view`, date_creation FROM article";
 
-        // Ajouter le tri SQL uniquement si ce n'est pas 'comments_count'
         if ($sort !== 'comments_count') {
             $validSorts = ['id', 'title', 'view', 'date_creation'];
             if (in_array($sort, $validSorts)) {
@@ -126,22 +122,20 @@ class ArticleManager extends AbstractEntityManager
         }
 
         $result = $this->db->query($sql);
-        $articles = $result->fetchAll(PDO::FETCH_ASSOC);
+        $articles = $result->fetchAll(PDO::FETCH_CLASS, 'Article');
 
         // Ajouter le nombre de commentaires pour chaque article
         $commentManager = new CommentManager();
-        foreach ($articles as &$article) {
-            $article['comments_count'] = $commentManager->countCommentsForArticle($article['id']);
+        foreach ($articles as $article) {
+            $article->comments_count = $commentManager->countCommentsForArticle($article->getId());
         }
 
-        // Trier les articles par le nombre de commentaires si nécessaire
+        // Trier par comments_count si nécessaire
         if ($sort === 'comments_count') {
             usort($articles, function ($a, $b) use ($order) {
-                if ($order === 'ASC') {
-                    return $a['comments_count'] <=> $b['comments_count'];
-                } else {
-                    return $b['comments_count'] <=> $a['comments_count'];
-                }
+                return ($order === 'ASC')
+                    ? $a->comments_count <=> $b->comments_count
+                    : $b->comments_count <=> $a->comments_count;
             });
         }
 
