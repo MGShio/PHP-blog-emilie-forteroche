@@ -11,6 +11,7 @@ class Comment extends AbstractEntity
     private string $pseudo;
     private string $content;
     private DateTime $dateCreation;
+    public int $count = 0;
     
     /**
      * Getter pour l'id de l'article.
@@ -106,6 +107,8 @@ class Comment extends AbstractEntity
             $this->setContent($value);
         } elseif ($name === 'date_creation') {
             $this->setDateCreation($value);
+        } elseif ($name === 'count') {
+            $this->count = (int)$value;
         }
     }
 }

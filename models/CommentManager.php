@@ -71,7 +71,10 @@ class CommentManager extends AbstractEntityManager
     {
         $sql = "SELECT COUNT(*) AS count FROM comment WHERE id_article = :idArticle";
         $result = $this->db->query($sql, ['idArticle' => $articleId]);
-        $count = $result->fetch(PDO::FETCH_ASSOC);
-        return (int)$count['count'];
+        // Set fetch mode to FETCH_CLASS so PDO will instantiate Comment and
+        // trigger its __set handler for the "count" property.
+        $result->setFetchMode(PDO::FETCH_CLASS, 'Comment');
+        $row = $result->fetch();
+        return (int)($row->count ?? 0);
     }
 }
