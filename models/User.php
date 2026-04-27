@@ -12,9 +12,10 @@ class User extends AbstractEntity
      * Setter pour le login.
      * @param string $login
      */
-    public function setLogin(string $login) : void 
+    public function setLogin(string $login) : self
     {
         $this->login = $login;
+        return $this;
     }
 
     /**
@@ -30,9 +31,10 @@ class User extends AbstractEntity
      * Setter pour le password.
      * @param string $password
      */
-    public function setPassword(string $password) : void 
+    public function setPassword(string $password) : self
     {
         $this->password = $password;
+        return $this;
     }
 
     /**

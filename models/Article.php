@@ -18,9 +18,10 @@ class Article extends AbstractEntity
      * Setter pour l'id de l'utilisateur. 
      * @param int $idUser
      */
-    public function setIdUser(int $idUser): void
+    public function setIdUser(int $idUser): self
     {
         $this->idUser = $idUser;
+        return $this;
     }
 
     /**
@@ -36,9 +37,10 @@ class Article extends AbstractEntity
      * Setter pour le titre.
      * @param string $title
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -54,9 +56,10 @@ class Article extends AbstractEntity
      * Setter pour le contenu.
      * @param string $content
      */
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+        return $this;
     }
 
 
@@ -87,13 +90,14 @@ class Article extends AbstractEntity
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé. 
      */
-    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s'): void
+    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s'): self
     {
         if (is_string($dateCreation)) {
             $this->dateCreation = new DateTime($dateCreation);
         } else {
             $this->dateCreation = $dateCreation;
         }
+        return $this;
     }
 
     /**
@@ -112,13 +116,14 @@ class Article extends AbstractEntity
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé.
      */
-    public function setDateUpdate(string|DateTime|null $dateUpdate, string $format = 'Y-m-d H:i:s'): void
+    public function setDateUpdate(string|DateTime|null $dateUpdate, string $format = 'Y-m-d H:i:s'): self
     {
         if (is_string($dateUpdate)) {
             $this->dateUpdate = new DateTime($dateUpdate);
         } else {
             $this->dateUpdate = $dateUpdate;
         }
+        return $this;
     }
 
     /**

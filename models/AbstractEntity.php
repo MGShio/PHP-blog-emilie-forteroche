@@ -40,9 +40,10 @@ abstract class AbstractEntity
      * @param int $id
      * @return void
      */
-    public function setId(int $id): void
+    public function setId(int $id): self
     {
         $this->id = $id;
+        return $this;
     }
 
 

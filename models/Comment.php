@@ -27,9 +27,10 @@ class Comment extends AbstractEntity
      * @param int $idArticle
      * @return void
      */
-    public function setIdArticle(int $idArticle): void 
+    public function setIdArticle(int $idArticle): self
     {
         $this->idArticle = $idArticle;
+        return $this;
     }
 
     /**
@@ -46,9 +47,10 @@ class Comment extends AbstractEntity
      * @param string $pseudo
      * @return void
      */
-    public function setPseudo(string $pseudo): void 
+    public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+        return $this;
     }
 
     /**
@@ -65,9 +67,10 @@ class Comment extends AbstractEntity
      * @param string $content
      * @return void
      */
-    public function setContent(string $content): void 
+    public function setContent(string $content): self
     {
         $this->content = $content;
+        return $this;
     }
 
     /**
@@ -86,13 +89,14 @@ class Comment extends AbstractEntity
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé. 
      */
-    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s') : void 
+    public function setDateCreation(string|DateTime $dateCreation, string $format = 'Y-m-d H:i:s') : self
     {
         if (is_string($dateCreation)) {
             $this->dateCreation = new DateTime($dateCreation);
         } else {
             $this->dateCreation = $dateCreation;
         }
+        return $this;
     }
 
     public function __set($name, $value)
